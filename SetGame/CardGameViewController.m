@@ -81,25 +81,25 @@
             cardButton.backgroundColor = nil;
         }
     }
-        UIImage *backImage = [UIImage imageNamed:@"Lotus.jpg"];
+    UIImage *backImage = [UIImage imageNamed:@"Lotus.jpg"];
     if (backImage){
-    if (!card.isFaceUp){
-        [cardButton setImage:backImage forState:UIControlStateNormal];
-        cardButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-    } else {
-        [cardButton setImage:nil forState:UIControlStateNormal];
+        if (!card.isFaceUp){
+            [cardButton setImage:backImage forState:UIControlStateNormal];
+            cardButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+        } else {
+            [cardButton setImage:nil forState:UIControlStateNormal];
+        }
     }
-    }
-    
 }
+
 -(void)updateUI
 {
     for (UIButton *cardButton  in self.cardButtons) {
         Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
-       [self updateCardButton:cardButton forCard:card];
+        [self updateCardButton:cardButton forCard:card];
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
-     [self.timeSlider setMinimumValue:0.0f];
+    [self.timeSlider setMinimumValue:0.0f];
     self.sliderMaxValue += (self.sliderMaxValue>self.flipCount) ? 0.0f : INC_SLIDER;
     [self.timeSlider setMaximumValue:self.sliderMaxValue];
     self.sliderMaxLabel.text = [NSString stringWithFormat:@"%d",(int)ceilf(self.sliderMaxValue)];
@@ -137,7 +137,7 @@
     self.sliderValue++;
     self.flipResult.alpha = 1.0;
     [self updateUI];
-    [self.flipsHistory addObject:self.flipResult.text];    
+    [self.flipsHistory addObject:self.flipResult.text];
 }
 
 - (IBAction)pressDeal:(id)sender
@@ -162,10 +162,10 @@
     int selectedIndex = (int) sender.value;
     
     if (selectedIndex < 0 || (selectedIndex > self.flipCount - 1)) return;
-
+    
     self.flipResult.alpha = (selectedIndex < self.flipCount-1) ? 0.3 : 1.0;
     self.flipResult.text = [self.flipsHistory objectAtIndex: selectedIndex];
-   
+    
 }
 
 - (void)viewDidLoad
