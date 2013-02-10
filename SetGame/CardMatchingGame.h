@@ -19,6 +19,9 @@
 - (Card *)cardAtIndex:(NSInteger)index;
 
 @property (readonly,nonatomic) int score;
-@property (readonly,nonatomic) NSString *resultOfFlip;
+@property (nonatomic) int gameLevel;
+@property (readonly,nonatomic) NSString *flipResult;
+@property (readonly,nonatomic) NSArray *matchedCards;
+@property (readonly,nonatomic) int flipPoints;
 
 @end

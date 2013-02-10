@@ -10,18 +10,15 @@
 
 #import "PlayingCard.h"
 #import "PlayingCardDeck.h"
-#import "CardMatchingGame.h"
 
 @interface CardGameViewController ()
-@property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
+
 @property(nonatomic) int flipCount;
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
-@property (strong,nonatomic) CardMatchingGame *game;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UILabel *resultOfFlip;
-@property (nonatomic) int gameLevel;
+@property (weak, nonatomic) IBOutlet UILabel *flipResult;
 @property (weak, nonatomic) IBOutlet UISlider *timeSlider;
 @property (nonatomic, strong) NSMutableArray *flipsHistory;
+@property (weak, nonatomic) IBOutlet UIButton *dealButton;
 @property (nonatomic) float sliderValue;
 @property (nonatomic) float sliderMaxValue;
 @property (weak, nonatomic) IBOutlet UILabel *sliderMaxLabel;
@@ -62,6 +59,31 @@
 #define INC_SLIDER 20.0f
 
 
+- (NSAttributedString *)cardAttributedContents:(Card *)card forFaceUp:(BOOL)isFaceUp
+{
+    NSDictionary *cardAttributes = @{};
+    NSString *textToDisplay = (isFaceUp) ? card.contents: @"";
+    NSAttributedString *cardContents = [[NSAttributedString alloc] initWithString:textToDisplay attributes:cardAttributes];
+    return cardContents;
+}
+
+-(void)updateCardButton:(UIButton *)cardButton forCard:(Card *)card
+{
+    [cardButton setAttributedTitle:[self cardAttributedContents:card forFaceUp:NO] forState:UIControlStateNormal];
+    [cardButton setAttributedTitle:[self cardAttributedContents:card forFaceUp:YES] forState:UIControlStateSelected];
+    [cardButton setAttributedTitle:[self cardAttributedContents:card forFaceUp:YES] forState:UIControlStateSelected|UIControlStateDisabled];
+    cardButton.selected = card.isFaceUp;
+    cardButton.enabled = !card.isUnplayable;
+    cardButton.alpha = card.isUnplayable ? self.unplayableAlpha : 1.0;
+    if (self.highlightSelectedCard) {
+        if (card.isFaceUp) {
+            cardButton.backgroundColor = [UIColor lightGrayColor];
+        } else {
+            cardButton.backgroundColor = nil;
+        }
+    }
+    
+}
 -(void)updateUI
 {
     UIImage *cardBackImage = [UIImage imageNamed:@"Lotus.jpg"];
@@ -80,17 +102,30 @@
         cardButton.alpha = (card.isUnplayable ? 0.3 : 1.0);
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
-    self.resultOfFlip.text = [NSString stringWithFormat:@"%@", self.game.resultOfFlip];
-    
-    [self.timeSlider setMinimumValue:0.0f];
+     [self.timeSlider setMinimumValue:0.0f];
     self.sliderMaxValue += (self.sliderMaxValue>self.flipCount) ? 0.0f : INC_SLIDER;
     [self.timeSlider setMaximumValue:self.sliderMaxValue];
     self.sliderMaxLabel.text = [NSString stringWithFormat:@"%d",(int)ceilf(self.sliderMaxValue)];
-
-    
+    [self updateFlipResult];
     [self.timeSlider setValue: self.sliderValue animated:YES];
     
 }
+
+-(void)updateFlipResult
+{
+    NSString *matches =@"";
+    if ([self.game.matchedCards count]>0)
+        matches =[self.game.matchedCards componentsJoinedByString:@"&"];
+    if ([self.game.flipResult isEqualToString:@"Matched"]) {
+        self.flipResult.text =  [NSString stringWithFormat:@"%@ %@ %d points bonus", self.game.flipResult,matches,self.game.flipPoints];
+    }else if ([self.game.flipResult isEqualToString:@"don't match"]) {
+        self.flipResult.text =  [NSString stringWithFormat:@"%@ %@ !! penalty %d points",matches, self.game.flipResult,self.game.flipPoints];
+    }else if ([self.game.flipResult isEqualToString:@"Flipped up"]) {
+        self.flipResult.text =  [NSString stringWithFormat:@"%@ %@ !! penalty %d points",self.game.flipResult, matches, self.game.flipPoints];
+    } else
+        self.flipResult.text =   @"";
+}
+
 
 -(void) setFlipCount:(int)flipCount
 {
@@ -102,14 +137,12 @@
 {
     [self.game flipCardAtIndex:[self.cardButtons indexOfObject:sender]];
     self.flipCount++;
-    [self.flipsHistory addObject:self.game.resultOfFlip];
     self.sliderValue++;
-    self.resultOfFlip.alpha = 1.0;
+    self.flipResult.alpha = 1.0;
     [self updateUI];
-
-
-    
+    [self.flipsHistory addObject:self.flipResult.text];    
 }
+
 - (IBAction)pressDeal:(id)sender
 {
     self.game = nil;
@@ -133,9 +166,15 @@
     
     if (selectedIndex < 0 || (selectedIndex > self.flipCount - 1)) return;
 
-    self.resultOfFlip.alpha = (selectedIndex < self.flipCount-1) ? 0.3 : 1.0;
-    self.resultOfFlip.text = [self.flipsHistory objectAtIndex: selectedIndex];
+    self.flipResult.alpha = (selectedIndex < self.flipCount-1) ? 0.3 : 1.0;
+    self.flipResult.text = [self.flipsHistory objectAtIndex: selectedIndex];
    
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.unplayableAlpha = 0.3;
+    self.highlightSelectedCard = NO;
+}
 @end

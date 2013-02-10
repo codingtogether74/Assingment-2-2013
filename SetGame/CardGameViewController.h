@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CardMatchingGame.h"
 
 @interface CardGameViewController : UIViewController
+@property (strong,nonatomic) CardMatchingGame *game;
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
+@property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
+@property (nonatomic) int gameLevel;
+@property (nonatomic) CGFloat unplayableAlpha;
+@property (nonatomic) BOOL highlightSelectedCard; // If set then we highlight cardButtons when selected
 
 @end
