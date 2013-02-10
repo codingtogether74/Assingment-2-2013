@@ -7,7 +7,6 @@
 //
 
 #import "SetCardDeck.h"
-#import "SetCard.h"
 
 @implementation SetCardDeck
 
@@ -16,10 +15,9 @@
     self = [super init];
     if (self) {
         for (NSString *shape in [SetCard validShapes]) {
-            for (int rank=1; rank<=[SetCard maxRank]; rank++) {
-                for (NSString *color in [SetCard validColors]) {
-                    for (NSString *shading in [SetCard validShadings]) {
-                        
+            for (NSUInteger rank=1; rank<=3; rank++) {
+                for (NSUInteger color=1; color<=3 ;color++) {
+                    for (NSUInteger shading=1; shading<=3; shading++) {
                         SetCard *card =[[SetCard alloc] init];
                         card.rank =rank;
                         card.shape =shape;

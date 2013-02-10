@@ -11,15 +11,11 @@
 @interface SetCard : Card
 
 @property (strong, nonatomic) NSString *shape;
-@property (strong,nonatomic) NSString *color;
-@property (strong,nonatomic) NSString *shading;
+@property (nonatomic) int color;
+@property (nonatomic) int shading;
 @property (nonatomic) int rank;
 
 
-
 + (NSArray *)validShapes;
-+ (NSArray *)validColors;
-+ (NSArray *)validShadings;
-+ (int)maxRank;
 
 @end

@@ -69,9 +69,8 @@
 
 -(void)updateCardButton:(UIButton *)cardButton forCard:(Card *)card
 {
-    [cardButton setAttributedTitle:[self cardAttributedContents:card forFaceUp:NO] forState:UIControlStateNormal];
-    [cardButton setAttributedTitle:[self cardAttributedContents:card forFaceUp:YES] forState:UIControlStateSelected];
-    [cardButton setAttributedTitle:[self cardAttributedContents:card forFaceUp:YES] forState:UIControlStateSelected|UIControlStateDisabled];
+    [cardButton setTitle:card.contents forState:UIControlStateSelected];
+    [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
     cardButton.selected = card.isFaceUp;
     cardButton.enabled = !card.isUnplayable;
     cardButton.alpha = card.isUnplayable ? self.unplayableAlpha : 1.0;
@@ -82,24 +81,22 @@
             cardButton.backgroundColor = nil;
         }
     }
+        UIImage *backImage = [UIImage imageNamed:@"Lotus.jpg"];
+    if (backImage){
+    if (!card.isFaceUp){
+        [cardButton setImage:backImage forState:UIControlStateNormal];
+        cardButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+    } else {
+        [cardButton setImage:nil forState:UIControlStateNormal];
+    }
+    }
     
 }
 -(void)updateUI
 {
-    UIImage *cardBackImage = [UIImage imageNamed:@"Lotus.jpg"];
     for (UIButton *cardButton  in self.cardButtons) {
         Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
-        [cardButton setTitle:card.contents forState:UIControlStateSelected];
-        [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
-        if (!card.isFaceUp){
-            [cardButton setImage:cardBackImage forState:UIControlStateNormal];
-            cardButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-        } else {
-            [cardButton setImage:nil forState:UIControlStateNormal];
-        }
-        cardButton.selected = card.faceUp;
-        cardButton.enabled = !card.isUnplayable;
-        cardButton.alpha = (card.isUnplayable ? 0.3 : 1.0);
+       [self updateCardButton:cardButton forCard:card];
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
      [self.timeSlider setMinimumValue:0.0f];
