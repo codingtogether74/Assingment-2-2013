@@ -29,7 +29,7 @@
             //--------------------shape---------
             if (![card1.shape isEqualToString:card2.shape] && ![card1.shape isEqualToString:card3.shape] && ![card2.shape isEqualToString:card3.shape]) {
                 numMatches ++;
-            } else if ( [card1.shape isEqualToString:card2.shape] && [card2.shape isEqualToString:card3.shape]) {
+            } else if ( ![card1.shape isEqualToString:card2.shape] || ![card2.shape isEqualToString:card3.shape]) {
                 numMatches ++;
             } else {
                 return score;
@@ -37,7 +37,7 @@
             //--------------------color-----------
             if ((card1.color != card2.color) && (card1.color != card3.color)&& !(card2.color != card3.color)) {
                 numMatches ++;
-            } else if ( (card1.color == card2.color) && (card2.color == card3.color)) {
+            } else if ( (card1.color != card2.color) || (card2.color != card3.color)) {
                 numMatches ++;
             } else {
                 return score;
@@ -45,7 +45,7 @@
             //------------------------rank---------
             if ((card1.rank != card2.rank) && (card1.rank != card3.rank)&& !(card2.rank != card3.rank)) {
                 numMatches ++;
-            } else if ( (card1.rank == card2.rank) && (card2.color == card3.rank)) {
+            } else if ( (card1.rank != card2.rank) || (card2.color != card3.rank)) {
                 numMatches ++;
             } else {
                 return score;
@@ -53,7 +53,7 @@
             //----------------------shading---------
             if ((card1.shading != card2.shading) && (card1.shading != card3.shading)&& !(card2.shading != card3.shading)) {
                 numMatches ++;
-            } else if ( (card1.shading == card2.shading) && (card2.shading == card3.shading)) {
+            } else if ( (card1.shading != card2.shading) ||(card2.shading != card3.shading)) {
                 numMatches ++;
             } else {
                 return score;

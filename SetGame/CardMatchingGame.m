@@ -53,6 +53,7 @@
     self.flipPoints = 0;
     Card *card = [self cardAtIndex: index];
     if (card && !card.isUnplayable) {
+        self. flipResult =@"Flipped down";
         if (!card.isFaceUp) {
             self.flipPoints=-FLIP_COST;
             self.flipResult =@"Flipped up";
