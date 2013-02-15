@@ -8,6 +8,10 @@
 
 #import "PlayingCard.h"
 
+@interface PlayingCard()
+@property(strong, nonatomic) UIImage *playingCardImage;
+
+@end
 @implementation PlayingCard
 @synthesize suit =_suit;     // because we provide setter AND getter
 
@@ -83,5 +87,20 @@
     }
 }
 
+-(UIImage*) playingCardImage{
+    if(!_playingCardImage){
+        NSDictionary *suitName = @{@"♥":@"heart", @"♦":@"diamond", @"♠":@"spade", @"♣":@"club"};
+        NSString *filePrefix = [suitName objectForKey:self.suit];
+        if(filePrefix){
+            NSString *fileName = [@[filePrefix,[NSNumber numberWithInteger:self.rank]] componentsJoinedByString:@"-"];
+            _playingCardImage = [UIImage imageNamed:fileName];
+        }
+    }
+    return _playingCardImage;
+}
+
+-(UIImage*) cardImage{
+    return self.playingCardImage;
+}
 
 @end

@@ -15,7 +15,7 @@
 @property (nonatomic,  getter = isFaceUp) BOOL faceUp;
 @property (nonatomic,  getter = isUnplayable) BOOL unplayable;
 @property (nonatomic, weak) NSString *description;
-
+@property(strong, nonatomic) UIImage *cardImage;
 
 -(int)match:(NSArray *)otherCard;
 @end

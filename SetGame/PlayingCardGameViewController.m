@@ -37,7 +37,7 @@
             [cardButton setImage:backImage forState:UIControlStateNormal];
             cardButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
         } else {
-            [cardButton setImage:nil forState:UIControlStateNormal];
+            [cardButton setImage:card.cardImage forState:UIControlStateNormal];
         }
         [cardButton setImage:nil forState:UIControlStateSelected|UIControlStateDisabled];
     }
