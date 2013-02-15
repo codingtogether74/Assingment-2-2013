@@ -8,16 +8,18 @@
 
 #import "SetGameViewController.h"
 #import "SetCardDeck.h"
-#import "CardMatchingGame.h"
-#import "CardGameViewController.h"
-#import "SetCard.h"
 
 @interface SetGameViewController ()
 @property (strong, nonatomic) CardMatchingGame *game;
 @end
 
 @implementation SetGameViewController
-@synthesize game=_game;
+
+- (Deck *)createDeck
+{
+    self.gameLevel =3;
+    return [[SetCardDeck alloc] init];
+}
 
 - (NSAttributedString *)cardAttributedContents:(Card *)card forFaceUp:(BOOL)isFaceUp
 {
@@ -31,8 +33,9 @@
     return cardContents;
 }
 
--(void)updateCardButton:(UIButton *)cardButton forCard:(Card *)card
+-(void)updateCardButton:(UIButton *)cardButton 
 {
+    Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
     if (card.isFaceUp) {
         cardButton.backgroundColor = [UIColor colorWithRed: 0.0 green:0.2 blue:0.4 alpha:0.1];
     } else {
@@ -41,29 +44,10 @@
     cardButton.alpha = card.isUnplayable ? 0.0 : 1.0;
 }
 
--(NSString *)textForFlipResult{
-     NSString *text=@"";
-    if ([self.game.matchedCards count]>1) {
-        if ([self.game.flipResult isEqualToString:@"don't match"]) {
-            text = [NSString stringWithFormat:@"don't match! (%d penalty)",self.game.flipPoints];
-        } else {
-            text = [NSString stringWithFormat:@"match! %d points bonus",self.game.flipPoints];
-        }
-    } else {
-        SetCard *card = [self.game.matchedCards lastObject];
-        text = [NSString stringWithFormat:@"%@",(card.isFaceUp) ? @"selected!" : @"de-selected!"];
-    }
-    
-    return text;
+- (NSString *)textForSingleCard
+{
+    Card *card = [self.game.matchedCards lastObject];
+    return [NSString stringWithFormat:@"%@",(card.isFaceUp) ? @"selected!" : @"de-selected!"];
 }
 
-- (CardMatchingGame *)game
-{
-    if (!_game) _game =  [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
-                                                           usingDeck:[[SetCardDeck alloc]init]
-                                                        andGameLevel:3];
-    _game.gameLevel =3;
-    return _game;
-    
-}
 @end
