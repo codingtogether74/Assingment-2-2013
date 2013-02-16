@@ -31,11 +31,11 @@
 {
     Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
     cardButton.alpha = card.isUnplayable ? 0.3 : 1.0;
-    UIImage *backImage = [UIImage imageNamed:@"Lotus.jpg"];
+    UIImage *backImage = [UIImage imageNamed:@"card-back.png"];
     if (backImage){
         if (!card.isFaceUp){
             [cardButton setImage:backImage forState:UIControlStateNormal];
-            cardButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+            cardButton.imageEdgeInsets = UIEdgeInsetsMake(-1, -1, -1, -1);
         } else {
             [cardButton setImage:card.cardImage forState:UIControlStateNormal];
         }
@@ -47,6 +47,5 @@
     Card *card = [self.game.matchedCards lastObject];
     return [NSString stringWithFormat:@"flipped %@",(card.isFaceUp) ? @"up!" : @"back!"];
 }
-
 
 @end
